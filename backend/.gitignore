@@ -1,0 +1,17 @@
+Language_translator
+.env
+requirements.txt
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzw
+*.pywz
+*.pyzwz
+*.pywzw
+*.pyzwzw
+*.pywzwzw
+*.pyzwzwzw
