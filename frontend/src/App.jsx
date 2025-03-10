@@ -19,11 +19,15 @@ import {
   useMediaQuery,
   IconButton,
   Tooltip,
-  Fade
+  Fade,
+  Switch,
+  FormControlLabel
 } from '@mui/material';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import TranslateIcon from '@mui/icons-material/Translate';
 import LanguageIcon from '@mui/icons-material/Language';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 import axios from 'axios';
 
 // Create a dark theme with customizable colors
@@ -113,6 +117,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [errorSeverity, setErrorSeverity] = useState('error');
+  const [isPaperLight, setIsPaperLight] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
@@ -201,12 +206,38 @@ function App() {
       }}>
         <Container maxWidth="xl" sx={{ width: '100%' }}>
           <Fade in timeout={1000}>
-            <Box sx={{ 
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              width: '100%'
-            }}>
+            <Box>
+              <Box sx={{ 
+                display: 'flex',
+                justifyContent: 'flex-end',
+                width: '100%',
+                mt: 1,
+                mb: 1
+              }}>
+                <FormControlLabel
+                  control={
+                    <Switch 
+                      checked={isPaperLight}
+                      onChange={() => setIsPaperLight(!isPaperLight)}
+                      color="primary"
+                      size="small"
+                    />
+                  }
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      {isPaperLight ? 
+                        <LightModeIcon sx={{ fontSize: 18, color: '#FFD700' }} /> : 
+                        <DarkModeIcon sx={{ fontSize: 18, color: '#999' }} />
+                      }
+                      <Typography variant="body2" sx={{ color: '#e5e7eb' }}>
+                        {isPaperLight ? 'Light Mode' : 'Dark Mode'}
+                      </Typography>
+                    </Box>
+                  }
+                  labelPlacement="end"
+                />
+              </Box>
+              
               <Typography 
                 variant="h2" 
                 component="h1" 
@@ -229,23 +260,44 @@ function App() {
                 p: { xs: 3, md: 6 },
                 width: '100%',
                 maxWidth: '1800px',
-                mx: 'auto'
+                mx: 'auto',
+                background: isPaperLight ? '#ffffff' : '#1f2937',
+                color: isPaperLight ? '#121212' : '#e5e7eb'
               }}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} md={5.5}>
                     <FormControl fullWidth sx={{ mb: 3 }}>
-                      <InputLabel sx={{ fontSize: '1.2rem' }}>From</InputLabel>
+                      <InputLabel sx={{ 
+                        fontSize: '1.2rem',
+                        color: isPaperLight ? '#333333' : undefined 
+                      }}>From</InputLabel>
                       <Select
                         value={sourceLanguage}
                         label="From"
                         onChange={(e) => setSourceLanguage(e.target.value)}
                         sx={{ 
                           fontSize: '1.2rem',
-                          '& .MuiSelect-select': { padding: '16px' }
+                          '& .MuiSelect-select': { padding: '16px' },
+                          bgcolor: isPaperLight ? '#ffffff' : undefined,
+                          color: isPaperLight ? '#121212' : undefined,
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: isPaperLight ? 'rgba(0, 0, 0, 0.23)' : undefined
+                          }
+                        }}
+                        MenuProps={{
+                          PaperProps: {
+                            sx: {
+                              bgcolor: isPaperLight ? '#ffffff' : undefined,
+                              color: isPaperLight ? '#121212' : undefined,
+                            }
+                          }
                         }}
                       >
                         {languages.map((lang) => (
-                          <MenuItem key={lang.code} value={lang.code} sx={{ fontSize: '1.2rem' }}>
+                          <MenuItem key={lang.code} value={lang.code} sx={{ 
+                            fontSize: '1.2rem',
+                            color: isPaperLight ? '#121212' : undefined 
+                          }}>
                             {lang.name}
                           </MenuItem>
                         ))}
@@ -254,7 +306,7 @@ function App() {
                     <TextField
                       fullWidth
                       multiline
-                      rows={10}
+                      rows={5}
                       variant="outlined"
                       label="Enter text to translate"
                       value={sourceText}
@@ -263,9 +315,20 @@ function App() {
                       sx={{ 
                         '& .MuiInputBase-root': { 
                           fontSize: '1.3rem',
-                          padding: '16px'
+                          padding: '16px',
+                          bgcolor: isPaperLight ? '#ffffff' : undefined,
+                          color: isPaperLight ? '#121212' : undefined,
                         },
-                        '& .MuiInputLabel-root': { fontSize: '1.2rem' }
+                        '& .MuiInputLabel-root': { 
+                          fontSize: '1.2rem',
+                          color: isPaperLight ? '#333333' : undefined 
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: isPaperLight ? 'rgba(0, 0, 0, 0.23)' : undefined
+                        },
+                        '& .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                          borderColor: isPaperLight ? theme.palette.primary.main : undefined
+                        }
                       }}
                     />
                   </Grid>
@@ -273,9 +336,7 @@ function App() {
                   <Grid item xs={12} md={1} sx={{ 
                     display: 'flex', 
                     alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexDirection: isMobile ? 'row' : 'column',
-                    gap: 2
+                    justifyContent: 'center'
                   }}>
                     <Tooltip title="Swap languages">
                       <IconButton
@@ -299,18 +360,37 @@ function App() {
 
                   <Grid item xs={12} md={5.5}>
                     <FormControl fullWidth sx={{ mb: 3 }}>
-                      <InputLabel sx={{ fontSize: '1.2rem' }}>To</InputLabel>
+                      <InputLabel sx={{ 
+                        fontSize: '1.2rem',
+                        color: isPaperLight ? '#333333' : undefined 
+                      }}>To</InputLabel>
                       <Select
                         value={targetLanguage}
                         label="To"
                         onChange={(e) => setTargetLanguage(e.target.value)}
                         sx={{ 
                           fontSize: '1.2rem',
-                          '& .MuiSelect-select': { padding: '16px' }
+                          '& .MuiSelect-select': { padding: '16px' },
+                          bgcolor: isPaperLight ? '#ffffff' : undefined,
+                          color: isPaperLight ? '#121212' : undefined,
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: isPaperLight ? 'rgba(0, 0, 0, 0.23)' : undefined
+                          }
+                        }}
+                        MenuProps={{
+                          PaperProps: {
+                            sx: {
+                              bgcolor: isPaperLight ? '#ffffff' : undefined,
+                              color: isPaperLight ? '#121212' : undefined,
+                            }
+                          }
                         }}
                       >
                         {languages.map((lang) => (
-                          <MenuItem key={lang.code} value={lang.code} sx={{ fontSize: '1.2rem' }}>
+                          <MenuItem key={lang.code} value={lang.code} sx={{ 
+                            fontSize: '1.2rem',
+                            color: isPaperLight ? '#121212' : undefined 
+                          }}>
                             {lang.name}
                           </MenuItem>
                         ))}
@@ -327,12 +407,23 @@ function App() {
                       sx={{ 
                         '& .MuiInputBase-root': { 
                           fontSize: '1.3rem',
-                          padding: '16px'
+                          padding: '16px',
+                          bgcolor: isPaperLight ? '#ffffff' : undefined,
+                          color: isPaperLight ? '#121212' : undefined,
                         },
-                        '& .MuiInputLabel-root': { fontSize: '1.2rem' }
+                        '& .MuiInputLabel-root': { 
+                          fontSize: '1.2rem',
+                          color: isPaperLight ? '#333333' : undefined 
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: isPaperLight ? 'rgba(0, 0, 0, 0.23)' : undefined
+                        }
                       }}
                     />
-                    <Divider sx={{ my: 3 }} />
+                    <Divider sx={{ 
+                      my: 3,
+                      borderColor: isPaperLight ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)' 
+                    }} />
                     <TextField
                       fullWidth
                       multiline
@@ -345,12 +436,21 @@ function App() {
                       sx={{ 
                         '& .MuiInputBase-root': { 
                           fontSize: '1.3rem',
-                          padding: '16px'
+                          padding: '16px',
+                          bgcolor: isPaperLight ? '#ffffff' : undefined,
+                          color: isPaperLight ? '#121212' : undefined,
                         },
-                        '& .MuiInputLabel-root': { fontSize: '1.2rem' },
+                        '& .MuiInputLabel-root': { 
+                          fontSize: '1.2rem',
+                          color: isPaperLight ? '#333333' : undefined 
+                        },
                         '& .MuiFormHelperText-root': { 
                           fontSize: '1rem',
-                          mt: 1
+                          mt: 1,
+                          color: isPaperLight ? '#555555' : undefined
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: isPaperLight ? 'rgba(0, 0, 0, 0.23)' : undefined
                         }
                       }}
                     />

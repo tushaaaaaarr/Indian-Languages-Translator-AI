@@ -9,6 +9,7 @@ A modern web application for translating text between various Indian languages a
 - FastAPI backend with Google's Generative AI integration
 - Real-time translation
 - Language swap functionality
+- Theme toggle (Light/Dark mode)
 - Error handling and loading states
 
 ## Prerequisites
@@ -79,6 +80,7 @@ The frontend will run on http://localhost:5173
 4. Select the target language
 5. Click the "Translate" button
 6. The translated text will appear in the right text box
+7. Use the Light/Dark mode toggle switch in the top-right corner to change the theme of the translation panel
 
 ## Supported Languages
 
